@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 10px;
+        }
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .post-list a {
+            color: #1abc9c;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .post-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h3 style="color: #1abc9c;">Latest Movie Posts</h3>
+    <a href="https://www.infoinmovie.com/search/label/Movie" style="color:#1abc9c;">Show more</a>
+    <div id="movie-posts" class="post-list"></div>
+
+    <script>
+        fetch('https://www.infoinmovie.com/feeds/posts/default/-/Movie?alt=json')
+        .then(response => response.json())
+        .then(data => {
+            let posts = data.feed.entry;
+            let container = document.getElementById("movie-posts");
+            let htmlContent = "";
+
+            posts.slice(0, 5).forEach(post => {
+                let title = post.title.$t;
+                let link = post.link.find(l => l.rel === "alternate").href;
+                htmlContent += `<a href="${link}" target="_blank">${title}</a><br>`;
+            });
+
+            container.innerHTML = htmlContent;
+        });
+    </script>
+</body>
+</html>
